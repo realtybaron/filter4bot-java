@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // compile below here
+    compile 'org.slf4j:slf4j-api:1.7.5'
+
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+    // testing below here
+    testCompile 'junit:junit:4.11'
+
+    testCompile group: 'org.springframework', name: 'spring-mock', version: '2.0.8'
+    testCompile group: 'org.springframework', name: 'spring-core', version: '2.0.8'
+}
