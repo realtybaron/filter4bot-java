@@ -4,6 +4,15 @@ repositories {
     mavenCentral()
 }
 
+/**
+ * https://goo.gl/DqXK1b
+ */
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/main"
+    }
+}
+
 dependencies {
     // compile below here
     compile 'org.slf4j:slf4j-api:1.7.5'
