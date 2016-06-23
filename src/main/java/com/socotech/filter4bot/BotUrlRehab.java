@@ -31,35 +31,30 @@ public class BotUrlRehab implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        try {
-            HttpServletRequest request = HttpServletRequest.class.cast(req);
-            HttpServletResponse response = HttpServletResponse.class.cast(res);
-            boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
-            boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
-            boolean isBot = isBotAddress || isBotUserAgent;
-            if (isBot && log.isDebugEnabled()) {
-                log.debug(request.getRemoteAddr() + " is a bot");
+        HttpServletRequest request = HttpServletRequest.class.cast(req);
+        HttpServletResponse response = HttpServletResponse.class.cast(res);
+        boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
+        boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
+        boolean isBot = isBotAddress || isBotUserAgent;
+        if (isBot && log.isDebugEnabled()) {
+            log.debug(request.getRemoteAddr() + " is a bot");
+        }
+        boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
+        if (isSessionEncoded && log.isDebugEnabled()) {
+            log.debug(request.getRemoteAddr() + " has session ID encoded on URL");
+        }
+        if (isBot && isSessionEncoded) {
+            String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
+            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            StringBuffer url = request.getRequestURL();
+            if (StringUtils.isNotEmpty(request.getQueryString())) {
+                url.append('?').append(request.getQueryString());
             }
-            boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
-            if (isSessionEncoded && log.isDebugEnabled()) {
-                log.debug(request.getRemoteAddr() + " has session ID encoded on URL");
-            }
-            if (isBot && isSessionEncoded) {
-                String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
-                response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                StringBuffer url = request.getRequestURL();
-                if (StringUtils.isNotEmpty(request.getQueryString())) {
-                    url.append('?').append(request.getQueryString());
-                }
-                response.setHeader("Location", StringUtils.remove(url.toString(), jsessionid));
-                response.setHeader("Connection", "close");
-                response.flushBuffer();
-            } else {
-                chain.doFilter(request, response);
-            }
-        } catch (IOException | ServletException e) {
-            log.error(e.getMessage(), e);
-            throw e;
+            response.setHeader("Location", StringUtils.remove(url.toString(), jsessionid));
+            response.setHeader("Connection", "close");
+            response.flushBuffer();
+        } else {
+            chain.doFilter(request, response);
         }
     }
 

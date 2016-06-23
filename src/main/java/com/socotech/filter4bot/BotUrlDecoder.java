@@ -31,20 +31,15 @@ public class BotUrlDecoder implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        try {
-            HttpServletRequest request = HttpServletRequest.class.cast(req);
-            HttpServletResponse response = HttpServletResponse.class.cast(res);
-            boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
-            boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
-            boolean isBot = isBotAddress || isBotUserAgent;
-            if (isBot) {
-                chain.doFilter(request, new StripSessionIdWrapper(response));
-            } else {
-                chain.doFilter(request, response);
-            }
-        } catch (IOException | ServletException e) {
-            log.error(e.getMessage(), e);
-            throw e;
+        HttpServletRequest request = HttpServletRequest.class.cast(req);
+        HttpServletResponse response = HttpServletResponse.class.cast(res);
+        boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
+        boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
+        boolean isBot = isBotAddress || isBotUserAgent;
+        if (isBot) {
+            chain.doFilter(request, new StripSessionIdWrapper(response));
+        } else {
+            chain.doFilter(request, response);
         }
     }
 
