@@ -1,16 +1,16 @@
 package com.socotech.filter4bot;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
+
+import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 16, 2010 Time: 7:21:07 AM
@@ -28,20 +28,15 @@ public class BotIdentifier {
         try {
             Pattern pattern = Pattern.compile("^# UA \"([^\"]*)\"$");
             for (BotResourceFile file : BotResourceFile.values()) {
-                URL url = URLs.findClasspathResource(file.getFileName());
-                LineIterator it = IOUtils.lineIterator(url.openStream(), "UTF-8");
-                try {
-                    while (it.hasNext()) {
-                        String line = it.nextLine();
-                        Matcher matcher = pattern.matcher(line);
-                        if (matcher.matches()) {
-                            this.botUserAgents.add(matcher.group(1).trim());
-                        } else {
-                            this.botIpAddress.add(line.trim());
-                        }
+                InputStream is = Resources.findClasspathStream(file.getFileName());
+                List<String> it = CharStreams.readLines(new InputStreamReader(is));
+                for (String s : it) {
+                    Matcher matcher = pattern.matcher(s);
+                    if (matcher.matches()) {
+                        this.botUserAgents.add(matcher.group(1).trim());
+                    } else {
+                        this.botIpAddress.add(s.trim());
                     }
-                } finally {
-                    LineIterator.closeQuietly(it);
                 }
                 log.info(this.botIpAddress.size() + " IP addresses loaded from " + file);
                 log.info(this.botUserAgents.size() + " user agents loaded from " + file);
