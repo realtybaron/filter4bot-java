@@ -29,13 +29,13 @@ public class BotIdentifier {
             Pattern pattern = Pattern.compile("^# UA \"([^\"]*)\"$");
             for (BotResourceFile file : BotResourceFile.values()) {
                 InputStream is = Resources.findClasspathStream(file.getFileName());
-                List<String> it = CharStreams.readLines(new InputStreamReader(is));
-                for (String s : it) {
-                    Matcher matcher = pattern.matcher(s);
+                List<String> lines = CharStreams.readLines(new InputStreamReader(is));
+                for (String line : lines) {
+                    Matcher matcher = pattern.matcher(line);
                     if (matcher.matches()) {
                         this.botUserAgents.add(matcher.group(1).trim());
                     } else {
-                        this.botIpAddress.add(s.trim());
+                        this.botIpAddress.add(line.trim());
                     }
                 }
                 log.info(this.botIpAddress.size() + " IP addresses loaded from " + file);
