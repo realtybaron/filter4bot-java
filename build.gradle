@@ -18,11 +18,9 @@ sourceSets {
 
 dependencies {
     // compile below here
-    compile 'org.slf4j:slf4j-api:1.7.5'
-
     compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
 
     // testing below here
     testCompile 'junit:junit:4.11'

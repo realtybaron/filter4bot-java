@@ -1,13 +1,17 @@
 package com.socotech.filter4bot;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.*;
+import java.io.IOException;
+import java.util.logging.Logger;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
@@ -36,13 +40,9 @@ public class BotUrlRehab implements Filter {
         boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
         boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
         boolean isBot = isBotAddress || isBotUserAgent;
-        if (isBot && log.isDebugEnabled()) {
-            log.debug(request.getRemoteAddr() + " is a bot");
-        }
+        log.info(request.getRemoteAddr() + " is a bot");
         boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
-        if (isSessionEncoded && log.isDebugEnabled()) {
-            log.debug(request.getRemoteAddr() + " has session ID encoded on URL");
-        }
+        log.info(request.getRemoteAddr() + " has session ID encoded on URL");
         if (isBot && isSessionEncoded) {
             String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
@@ -63,5 +63,5 @@ public class BotUrlRehab implements Filter {
         // noop
     }
 
-    private static Logger log = LoggerFactory.getLogger(BotUrlRehab.class);
+    private static final Logger log = Logger.getLogger(BotUrlRehab.class.getName());
 }

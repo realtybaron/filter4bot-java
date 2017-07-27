@@ -3,14 +3,14 @@ package com.socotech.filter4bot;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 16, 2010 Time: 7:21:07 AM
@@ -42,7 +42,7 @@ public class BotIdentifier {
                 log.info(this.botUserAgents.size() + " user agents loaded from " + file);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
         return this;
     }
@@ -74,5 +74,6 @@ public class BotIdentifier {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(BotUrlRehab.class);
+    private static final Logger log = Logger.getLogger(BotUrlRehab.class.getName());
+
 }
