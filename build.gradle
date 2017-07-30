@@ -19,7 +19,7 @@ sourceSets {
 dependencies {
     // compile below here
     compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
 
     // testing below here
