@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Strings;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
@@ -39,18 +39,22 @@ public class BotUrlRehab implements Filter {
         HttpServletResponse response = HttpServletResponse.class.cast(res);
         boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
         boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
-        boolean isBot = isBotAddress || isBotUserAgent;
-        log.info(request.getRemoteAddr() + " is a bot");
         boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
-        log.info(request.getRemoteAddr() + " has session ID encoded on URL");
+        boolean isBot = isBotAddress || isBotUserAgent;
+        if (isBot) {
+            log.info(request.getRemoteAddr() + " is a bot");
+        }
+        if (isSessionEncoded) {
+            log.info(request.getRemoteAddr() + " has session ID encoded on URL");
+        }
         if (isBot && isSessionEncoded) {
             String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             StringBuffer url = request.getRequestURL();
-            if (StringUtils.isNotEmpty(request.getQueryString())) {
+            if (!Strings.isNullOrEmpty(request.getQueryString())) {
                 url.append('?').append(request.getQueryString());
             }
-            response.setHeader("Location", StringUtils.remove(url.toString(), jsessionid));
+            response.setHeader("Location", url.toString().replace(jsessionid, ""));
             response.setHeader("Connection", "close");
             response.flushBuffer();
         } else {
