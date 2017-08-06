@@ -54,7 +54,7 @@ public class BotUrlRehab implements Filter {
             if (!Strings.isNullOrEmpty(request.getQueryString())) {
                 url.append('?').append(request.getQueryString());
             }
-            response.setHeader("Location", url.toString().replace(jsessionid, ""));
+            response.setHeader("Location", url.toString().toLowerCase().replace(jsessionid, ""));
             response.setHeader("Connection", "close");
             response.flushBuffer();
         } else {
