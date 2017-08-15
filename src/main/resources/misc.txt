@@ -3299,6 +3299,7 @@ witch.de
 # UA "Yandex/2.01.000 (compatible; Win16; Dyatel; D)"
 # UA "Yandex/2.01.000 (compatible; Win16; Dyatel; N)"
 # UA "Yandex/2.01.000 (compatible; Win16; Dyatel; Z)"
+# UA "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)"
 77.88.25.28
 213.180.193
 213.180.194
@@ -3313,6 +3314,7 @@ witch.de
 93.158.148.31
 93.158.149.32
 93.158.151.24
+93.158.161.102
 95.108.156.251
 95.108.150.235
 
