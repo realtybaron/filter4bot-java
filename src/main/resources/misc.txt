@@ -458,6 +458,10 @@ blitzsuche.de
 # UA "RoboCrawl (www.canadiancontent.net)"
 207.44.220.53
 
+# CCBot
+# UA "CCBot/2.0 (http://commoncrawl.org/faq/)"
+54.156.92.46
+
 # centrum.cz
 # UA "holmes/3.8 (morfeo.centrum.cz/bot)"
 213.29.7.220
