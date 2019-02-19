@@ -3,14 +3,17 @@ package com.socotech.filter4bot;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import javax.servlet.ServletException;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Mar 5, 2007 Time: 7:56:14 AM
  */
-@SuppressWarnings("unchecked")
+@RunWith(BlockJUnit4ClassRunner.class)
 public class BotIdentifierTest {
+
     private BotIdentifier botIdentifier = new BotIdentifier();
 
     @Before
@@ -29,4 +32,5 @@ public class BotIdentifierTest {
         Assert.assertTrue("Valid user agent not found", this.botIdentifier.isBotUserAgent("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"));
         Assert.assertTrue("Valid user agent not found", this.botIdentifier.isBotUserAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"));
     }
+
 }

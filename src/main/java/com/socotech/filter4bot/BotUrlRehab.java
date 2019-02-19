@@ -1,17 +1,12 @@
 package com.socotech.filter4bot;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import com.google.common.base.Strings;
+
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.common.base.Strings;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
@@ -35,8 +30,8 @@ public class BotUrlRehab implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = HttpServletRequest.class.cast(req);
-        HttpServletResponse response = HttpServletResponse.class.cast(res);
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
         boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
         boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
         boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
@@ -48,7 +43,7 @@ public class BotUrlRehab implements Filter {
             log.info(request.getRemoteAddr() + " has session ID encoded on URL");
         }
         if (isBot && isSessionEncoded) {
-            String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
+            String jsessionid = ";jsessionid=" + request.getSession().getId();
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             StringBuffer url = request.getRequestURL();
             if (!Strings.isNullOrEmpty(request.getQueryString())) {

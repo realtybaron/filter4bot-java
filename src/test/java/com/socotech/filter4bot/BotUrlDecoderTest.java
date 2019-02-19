@@ -2,6 +2,8 @@ package com.socotech.filter4bot;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by IntelliJ IDEA. User: marc Date: Mar 5, 2007 Time: 7:56:14 AM
  */
-@SuppressWarnings("unchecked")
+@RunWith(BlockJUnit4ClassRunner.class)
 public class BotUrlDecoderTest {
     @Test
     public void wrapResponse() throws ServletException {
