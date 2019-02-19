@@ -12,7 +12,7 @@ public class StripSessionIdWrapper extends HttpServletResponseWrapper {
      *
      * @param response HTTP response
      */
-    public StripSessionIdWrapper(HttpServletResponse response) {
+    StripSessionIdWrapper(HttpServletResponse response) {
         super(response);
     }
 
