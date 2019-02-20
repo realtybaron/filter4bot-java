@@ -29,8 +29,10 @@ public class RequestUtils {
      * @return full url
      */
     public static String getAbsoluteURL(HttpServletRequest request) {
-        StringBuffer buffer = request.getRequestURL();
-        if (request.getQueryString() != null) {
+        String uri = RequestUtils.getAttribute(request, "javax.servlet.forward.request_uri");
+        String query = RequestUtils.getAttribute(request, "javax.servlet.forward.query_string");
+        StringBuilder buffer = new StringBuilder(uri);
+        if (query != null) {
             buffer.append('?').append(request.getQueryString());
         }
         return buffer.toString();
