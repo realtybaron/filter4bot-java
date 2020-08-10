@@ -11,20 +11,18 @@ import java.util.logging.Logger;
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
  */
-@SuppressWarnings("unchecked")
 public class BotUrlRehab implements Filter {
     /**
      * Identifies bots by their IP address and/or user agent
      */
-    private BotIdentifier botIdentifier = new BotIdentifier();
+    private final BotIdentifier botIdentifier = new BotIdentifier();
 
     /**
      * Initialize the bot identifier
      *
      * @param config filter config
-     * @throws ServletException
      */
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
         this.botIdentifier.init();
     }
 
