@@ -1,14 +1,14 @@
 package com.socotech.filter4bot;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Closeables;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 /**
  * User: marc Date: Mar 9, 2010 Time: 7:02:01 PM
@@ -58,11 +58,8 @@ public class Resources {
      */
     public static byte[] toByteArray(URL url) throws IOException {
         Preconditions.checkNotNull(url, "URL cannot be empty");
-        InputStream is = url.openStream();
-        try {
+        try (InputStream is = url.openStream()) {
             return ByteStreams.toByteArray(is);
-        } finally {
-            Closeables.closeQuietly(is);
         }
     }
 }

@@ -14,7 +14,7 @@ import javax.servlet.ServletException;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class BotIdentifierTest {
 
-    private BotIdentifier botIdentifier = new BotIdentifier();
+    private final BotIdentifier botIdentifier = new BotIdentifier();
 
     @Before
     public void setUp() {

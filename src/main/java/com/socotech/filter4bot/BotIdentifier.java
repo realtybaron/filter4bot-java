@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
  */
 public class BotIdentifier {
 
-    private List<String> botIpAddress = Lists.newArrayList();
-    private List<String> botUserAgents = Lists.newArrayList();
+    private final List<String> botIpAddress = Lists.newArrayList();
+    private final List<String> botUserAgents = Lists.newArrayList();
 
     /**
      * Build list of bot IP addresses
@@ -29,18 +29,19 @@ public class BotIdentifier {
         try {
             Pattern pattern = Pattern.compile("^# UA \"([^\"]*)\"$");
             for (BotResourceFile file : BotResourceFile.values()) {
-                InputStream is = Resources.findClasspathStream(file.getFileName());
-                List<String> lines = CharStreams.readLines(new InputStreamReader(is));
-                for (String line : lines) {
-                    Matcher matcher = pattern.matcher(line);
-                    if (matcher.matches()) {
-                        this.botUserAgents.add(matcher.group(1).trim());
-                    } else {
-                        this.botIpAddress.add(line.trim());
+                try (InputStream is = Resources.findClasspathStream(file.getFileName())) {
+                    List<String> lines = CharStreams.readLines(new InputStreamReader(is));
+                    for (String line : lines) {
+                        Matcher matcher = pattern.matcher(line);
+                        if (matcher.matches()) {
+                            this.botUserAgents.add(matcher.group(1).trim());
+                        } else {
+                            this.botIpAddress.add(line.trim());
+                        }
                     }
+                    log.info(this.botIpAddress.size() + " IP addresses loaded from " + file);
+                    log.info(this.botUserAgents.size() + " user agents loaded from " + file);
                 }
-                log.info(this.botIpAddress.size() + " IP addresses loaded from " + file);
-                log.info(this.botUserAgents.size() + " user agents loaded from " + file);
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, e.getMessage(), e);
