@@ -6,7 +6,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
@@ -15,7 +14,7 @@ public class BotUrlRehab implements Filter {
     /**
      * Identifies bots by their IP address and/or user agent
      */
-    private final BotIdentifier botIdentifier = new BotIdentifier();
+    private BotIdentifier botIdentifier;
 
     /**
      * Initialize the bot identifier
@@ -23,7 +22,7 @@ public class BotUrlRehab implements Filter {
      * @param config filter config
      */
     public void init(FilterConfig config) {
-        this.botIdentifier.init();
+        this.botIdentifier = new BotIdentifier().init();
     }
 
     @Override
@@ -33,15 +32,9 @@ public class BotUrlRehab implements Filter {
         boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
         boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
         boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
-        boolean isBot = isBotAddress || isBotUserAgent;
-        if (isBot) {
-            log.info(request.getRemoteAddr() + " is a bot");
-        }
-        if (isSessionEncoded) {
-            log.info(request.getRemoteAddr() + " has session ID encoded on URL");
-        }
-        if (isBot && isSessionEncoded) {
-            String jsessionid = ";jsessionid=" + request.getSession().getId();
+        boolean isBotAddressOrUserAgent = isBotAddress || isBotUserAgent;
+        if (isBotAddressOrUserAgent && isSessionEncoded) {
+            String jsessionid = ";jsessionid=" + request.getRequestedSessionId();
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             StringBuffer url = request.getRequestURL();
             if (!Strings.isNullOrEmpty(request.getQueryString())) {
@@ -60,5 +53,4 @@ public class BotUrlRehab implements Filter {
         // noop
     }
 
-    private static final Logger log = Logger.getLogger(BotUrlRehab.class.getName());
 }

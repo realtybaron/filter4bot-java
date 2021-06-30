@@ -8,7 +8,6 @@ import java.io.IOException;
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
  */
-@SuppressWarnings("unchecked")
 public class BotUrlDecoder implements Filter {
     /**
      * Identifies bots by their IP address and/or user agent
@@ -19,7 +18,7 @@ public class BotUrlDecoder implements Filter {
      * Initialize the bot identifier
      *
      * @param config filter config
-     * @throws ServletException
+     * @throws ServletException if shit broke
      */
     @Override
     public void init(FilterConfig config) throws ServletException {
