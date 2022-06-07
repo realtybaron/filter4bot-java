@@ -1,9 +1,7 @@
 package com.socotech.filter4bot;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -15,7 +13,6 @@ import java.io.IOException;
 /**
  * Created by IntelliJ IDEA. User: marc Date: Mar 5, 2007 Time: 7:56:14 AM
  */
-@RunWith(BlockJUnit4ClassRunner.class)
 public class BotUrlDecoderTest {
     @Test
     public void wrapResponse() throws ServletException {
@@ -38,14 +35,10 @@ public class BotUrlDecoderTest {
                     this.setCommitted(true);
                 }
             };
-            FilterChain chain = new FilterChain() {
-                public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-                    Assert.assertEquals("Response is not wrapped", StripSessionIdWrapper.class, response.getClass());
-                }
-            };
+            FilterChain chain = (request1, response1) -> Assertions.assertSame(StripSessionIdWrapper.class, response1.getClass(), "Response is not wrapped");
             filter.doFilter(request, response, chain);
         } catch (ServletException | IOException e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

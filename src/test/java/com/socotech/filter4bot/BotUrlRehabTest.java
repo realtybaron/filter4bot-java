@@ -1,9 +1,7 @@
 package com.socotech.filter4bot;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -18,36 +16,37 @@ import java.io.IOException;
 /**
  * Created by IntelliJ IDEA. User: marc Date: Mar 5, 2007 Time: 7:56:14 AM
  */
-@RunWith(BlockJUnit4ClassRunner.class)
 public class BotUrlRehabTest {
     @Test
-    public void stripJSessionId() throws ServletException {
+    public void stripJSessionId() {
         BotUrlRehab filter = new BotUrlRehab();
         MockFilterConfig config = new MockFilterConfig();
         ServletContext context = config.getServletContext();
         filter.init(config);
         try {
-            MockHttpSession session = new MockHttpSession(context);
+            MockHttpSession session = new MockHttpSession(context, "ABC123");
             MockHttpServletRequest request = new MockHttpServletRequest(context);
             request.setSession(session);
             request.setRemoteAddr("66.249.72.72"); // google
             request.setServerName("www.realtybaron.com");
             request.setRequestURI("/search/foo;jsessionid=" + session.getId());
             request.setQueryString("bar=1");
+            request.setRequestedSessionId("ABC123");
             request.setRequestedSessionIdFromURL(true);
+            request.setRequestedSessionIdFromCookie(false);
             MockHttpServletResponse response = new MockHttpServletResponse() {
                 @Override
                 public void flushBuffer() {
                     this.setCommitted(true);
                 }
             };
-            FilterChain chain = (request1, response1) -> Assert.fail("Filter did not detect spider with session ID on the URL");
+            FilterChain chain = (request1, response1) -> Assertions.fail("Filter did not detect spider with session ID on the URL");
             filter.doFilter(request, response, chain);
-            Assert.assertEquals("Wrong status code", HttpServletResponse.SC_MOVED_PERMANENTLY, response.getStatus());
-            Assert.assertEquals("Wrong redirect URL", "http://www.realtybaron.com/search/foo?bar=1", response.getHeader("Location"));
-            Assert.assertTrue("Response was not committed", response.isCommitted());
+            Assertions.assertEquals(HttpServletResponse.SC_MOVED_PERMANENTLY, response.getStatus(), "Wrong status code");
+            Assertions.assertEquals("http://www.realtybaron.com/search/foo?bar=1", response.getHeader("Location"), "Wrong redirect URL");
+            Assertions.assertTrue(response.isCommitted(), "Response was not committed");
         } catch (ServletException | IOException e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

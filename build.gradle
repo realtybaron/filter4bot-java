@@ -3,21 +3,23 @@ apply plugin: 'java-library'
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
 
+test {
+    useJUnitPlatform()
+}
+
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
     // compile below here
     api group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
-    api group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    api group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
     // runtime below here
     implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
     // testing below here
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.4.RELEASE'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.14'
 }

@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA. User: marc Date: Oct 4, 2006 Time: 5:37:41 AM
@@ -29,8 +30,8 @@ public class BotUrlRehab implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        boolean isBotAddress = this.botIdentifier.isBotIpAddress(request);
-        boolean isBotUserAgent = this.botIdentifier.isBotUserAgent(request);
+        boolean isBotAddress = botIdentifier.isBotIpAddress(request);
+        boolean isBotUserAgent = botIdentifier.isBotUserAgent(request);
         boolean isSessionEncoded = request.isRequestedSessionIdFromURL();
         boolean isBotAddressOrUserAgent = isBotAddress || isBotUserAgent;
         if (isBotAddressOrUserAgent && isSessionEncoded) {
@@ -40,7 +41,8 @@ public class BotUrlRehab implements Filter {
             if (!Strings.isNullOrEmpty(request.getQueryString())) {
                 url.append('?').append(request.getQueryString());
             }
-            response.setHeader("Location", url.toString().toLowerCase().replace(jsessionid, ""));
+            Locale locale = Locale.getDefault();
+            response.setHeader("Location", url.toString().toLowerCase(locale).replace(jsessionid.toLowerCase(locale), ""));
             response.setHeader("Connection", "close");
             response.flushBuffer();
         } else {
